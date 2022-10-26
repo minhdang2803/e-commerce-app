@@ -5,6 +5,7 @@ import 'package:ecom/utils/utils.dart';
 import 'package:ecom/views/home_screen/cart_component/cart_component.dart';
 import 'package:ecom/views/home_screen/home_component/home_component.dart';
 import 'package:ecom/views/home_screen/home_component/product_description.dart';
+import 'package:ecom/views/home_screen/product_component/product_component.dart';
 import 'package:ecom/views/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,7 +84,10 @@ class _ProductItemState extends State<ProductItem> {
             textColor: Colors.black,
             color: AppColor.buttonColor,
             width: 150.w,
-            function: () {},
+            function: () {
+              context.read<HomeProvider>().addProduct(widget.productItem);
+              context.goNamed(CartComponent.routeName);
+            },
           )
         ],
       ),

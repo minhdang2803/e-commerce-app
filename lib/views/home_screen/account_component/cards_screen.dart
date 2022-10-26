@@ -3,6 +3,7 @@ import 'package:ecom/theme/app_font.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../models/models.dart';
 import '../../../utils/utils.dart';
@@ -10,11 +11,24 @@ import '../../../utils/utils.dart';
 class CardsScreen extends StatelessWidget {
   const CardsScreen({super.key});
   static const String routeName = "CardsScreen";
-  static MaterialPage page() {
-    return const MaterialPage(
-      child: CardsScreen(),
+  static CustomTransitionPage page() {
+    return CustomTransitionPage<void>(
+      key: const ValueKey(routeName),
       name: routeName,
-      key: ValueKey(routeName),
+      child: const CardsScreen(),
+      transitionsBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation, Widget child) =>
+          SlideTransition(
+        position: animation.drive(
+          Tween<Offset>(
+            begin: const Offset(-1.0, 0),
+            end: Offset.zero,
+          ).chain(
+            CurveTween(curve: Curves.linear),
+          ),
+        ),
+        child: child,
+      ),
     );
   }
 

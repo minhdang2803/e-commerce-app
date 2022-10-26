@@ -62,11 +62,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
             // border:,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.radius ?? 20.r),
-              borderSide: BorderSide(color: AppColor.inputTextBorder),
+              borderSide: BorderSide(color: Colors.grey.shade500),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.radius ?? 20.r),
-              borderSide: BorderSide(color: AppColor.inputTextBorder),
+              borderSide: BorderSide(color: Colors.grey.shade500),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.radius ?? 20.r),
@@ -77,9 +77,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               borderSide: const BorderSide(color: Colors.red),
             ),
             hintText: widget.hintText,
-            hintStyle: AppTypography.body.copyWith(
-              color: AppColor.inputTextBorder,
-            ),
+            hintStyle: AppTypography.body.copyWith(color: Colors.grey.shade500),
           ),
           cursorColor: AppColor.inputTextBorder,
           validator: widget.validator,

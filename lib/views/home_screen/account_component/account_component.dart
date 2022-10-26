@@ -1,10 +1,6 @@
 import 'package:ecom/controllers/controllers.dart';
 import 'package:ecom/theme/app_font.dart';
-import 'package:ecom/views/home_screen/account_component/cards_screen.dart';
-import 'package:ecom/views/home_screen/account_component/digital_wallet_screen.dart';
-import 'package:ecom/views/home_screen/account_component/edit_profile.dart';
-import 'package:ecom/views/home_screen/account_component/history_screen.dart';
-import 'package:ecom/views/home_screen/account_component/shopping_address_screen.dart';
+import 'account_component_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

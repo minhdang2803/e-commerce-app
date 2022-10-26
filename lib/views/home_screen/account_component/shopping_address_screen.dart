@@ -4,15 +4,29 @@ import 'package:ecom/utils/custom_button.dart';
 import 'package:ecom/utils/custom_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class AddressScreen extends StatelessWidget {
   const AddressScreen({super.key});
   static const String routeName = 'AddressScreen';
-  static MaterialPage page() {
-    return const MaterialPage(
-      child: AddressScreen(),
+  static CustomTransitionPage page() {
+    return CustomTransitionPage<void>(
       name: routeName,
-      key: ValueKey(routeName),
+      key: const ValueKey(routeName),
+      child: const AddressScreen(),
+      transitionsBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation, Widget child) =>
+          SlideTransition(
+        position: animation.drive(
+          Tween<Offset>(
+            begin: const Offset(-1.0, 0),
+            end: Offset.zero,
+          ).chain(
+            CurveTween(curve: Curves.linear),
+          ),
+        ),
+        child: child,
+      ),
     );
   }
 
@@ -35,19 +49,21 @@ class AddressScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final element = addressList[index];
                     return AddressCard(
-                        title: element.title,
-                        description: element.description,
-                        onChange: (value) {});
+                      title: element.title,
+                      description: element.description,
+                      onChange: (value) {},
+                    );
                   },
                   separatorBuilder: (context, index) => 10.verticalSpace,
                   itemCount: addressList.length,
                 ),
               ),
               CustomButton(
-                  text: 'Add Address',
-                  color: AppColor.buttonColor,
-                  textColor: Colors.black,
-                  function: () {})
+                text: 'Add Address',
+                color: AppColor.buttonColor,
+                textColor: Colors.black,
+                function: () {},
+              )
             ],
           ),
         ),

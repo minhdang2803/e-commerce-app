@@ -1,5 +1,7 @@
 import 'package:ecom/controllers/app_state.dart';
 import 'package:ecom/models/home_screen/product_component/product_model.dart';
+import 'package:ecom/views/checkout_screen/checkout3_screen.dart';
+import 'package:ecom/views/checkout_screen/checkout_screen.dart';
 import 'package:ecom/views/home_screen/account_component/account_component.dart';
 import 'package:ecom/views/home_screen/account_component/cards_screen.dart';
 import 'package:ecom/views/home_screen/account_component/digital_wallet_screen.dart';
@@ -18,6 +20,7 @@ import 'package:ecom/views/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../views/checkout_screen/checkout2_screen.dart';
 import '../views/home_screen/home_screen.dart';
 
 /// Navigator 2.0, how to use?g
@@ -29,8 +32,8 @@ class MyRouter {
   final AppState appState;
   bool isLoggedIn;
   MyRouter(this.appState, this.isLoggedIn);
-  final _rootNavigatorKey = GlobalKey<NavigatorState>();
-  final _shellNavigatorKey = GlobalKey<NavigatorState>();
+  final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+  final _shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
   late GoRouter myRouter = GoRouter(
     navigatorKey: _rootNavigatorKey,
     refreshListenable: appState,
@@ -75,10 +78,19 @@ class MyRouter {
         routes: [
           GoRoute(
             path: '/home',
+            parentNavigatorKey: _shellNavigatorKey,
             name: HomeComponent.routeName,
             pageBuilder: (context, state) => HomeComponent.page(),
+            routes: [],
+          ),
+          GoRoute(
+            path: '/product',
+            parentNavigatorKey: _shellNavigatorKey,
+            name: ProductComponent.routeName,
+            pageBuilder: (context, index) => ProductComponent.page(),
             routes: [
               GoRoute(
+                parentNavigatorKey: _rootNavigatorKey,
                 path: ':name',
                 name: ProductItem.routeName,
                 pageBuilder: (context, state) {
@@ -86,20 +98,44 @@ class MyRouter {
                       state.extra! as Map<String, Object>;
                   return ProductItem.page(extra['item'] as ProductItemModel);
                 },
-              )
+              ),
             ],
-          ),
-          GoRoute(
-            path: '/product',
-            name: ProductComponent.routeName,
-            pageBuilder: (context, index) => ProductComponent.page(),
-            routes: [],
           ),
           GoRoute(
             path: '/cart',
             name: CartComponent.routeName,
             pageBuilder: (context, state) => CartComponent.page(),
-            routes: [],
+            routes: [
+              GoRoute(
+                parentNavigatorKey: _rootNavigatorKey,
+                path: 'checkout1',
+                name: CheckoutFirstScreen.routeName,
+                pageBuilder: (context, state) => CheckoutFirstScreen.page(),
+                routes: [
+                  // GoRoute(
+                  //   parentNavigatorKey: _shellNavigatorKey,
+                  //   path: 'checkout2',
+                  //   name: CheckoutSecondScreen.routeName,
+                  //   builder: (context, state) => CheckoutSecondScreen(),
+                  //   routes: [],
+                  // )
+                ],
+              ),
+              GoRoute(
+                parentNavigatorKey: _rootNavigatorKey,
+                path: 'checkout2',
+                name: CheckoutSecondScreen.routeName,
+                pageBuilder: (context, state) => CheckoutSecondScreen.page(),
+                routes: [],
+              ),
+              GoRoute(
+                parentNavigatorKey: _rootNavigatorKey,
+                path: 'checkout3',
+                name: CheckoutThirdScreen.routeName,
+                pageBuilder: (context, state) => CheckoutThirdScreen.page(),
+                routes: [],
+              )
+            ],
           ),
           GoRoute(
             path: '/account',
@@ -109,30 +145,35 @@ class MyRouter {
               GoRoute(
                 path: 'histories',
                 name: OrderHistoryScreen.routeName,
+                parentNavigatorKey: _rootNavigatorKey,
                 pageBuilder: (context, state) => OrderHistoryScreen.page(),
               ),
               GoRoute(
                 path: 'addresses',
                 name: AddressScreen.routeName,
+                parentNavigatorKey: _rootNavigatorKey,
                 pageBuilder: (context, state) => AddressScreen.page(),
               ),
               GoRoute(
                 path: 'cards',
                 name: CardsScreen.routeName,
+                parentNavigatorKey: _rootNavigatorKey,
                 pageBuilder: (context, state) => CardsScreen.page(),
               ),
               GoRoute(
                 path: 'userinfo',
                 name: EditProfileScreen.routeName,
+                parentNavigatorKey: _rootNavigatorKey,
                 pageBuilder: (context, state) => EditProfileScreen.page(),
               ),
               GoRoute(
                 path: 'digitalwallet',
                 name: DigitalWalletComponent.routeName,
+                parentNavigatorKey: _rootNavigatorKey,
                 pageBuilder: (context, state) => DigitalWalletComponent.page(),
               ),
             ],
-          )
+          ),
         ],
       ),
     ],

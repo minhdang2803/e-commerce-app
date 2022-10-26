@@ -71,7 +71,7 @@ class HomeScreen extends StatelessWidget {
     if (location.startsWith('/product')) {
       return 1;
     }
-    if (location.startsWith('/card')) {
+    if (location.startsWith('/cart')) {
       return 2;
     }
     if (location.startsWith('/account')) {

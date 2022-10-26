@@ -1,15 +1,29 @@
 import 'package:ecom/theme/app_font.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class DigitalWalletComponent extends StatelessWidget {
   const DigitalWalletComponent({super.key});
   static const String routeName = 'DigitalWalletComponent';
-  static MaterialPage page() {
-    return const MaterialPage(
-      child: DigitalWalletComponent(),
+  static CustomTransitionPage page() {
+    return CustomTransitionPage<void>(
       name: routeName,
-      key: ValueKey(routeName),
+      key: const ValueKey(routeName),
+      child: const DigitalWalletComponent(),
+      transitionsBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation, Widget child) =>
+          SlideTransition(
+        position: animation.drive(
+          Tween<Offset>(
+            begin: const Offset(-1.0, 0),
+            end: Offset.zero,
+          ).chain(
+            CurveTween(curve: Curves.linear),
+          ),
+        ),
+        child: child,
+      ),
     );
   }
 

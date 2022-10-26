@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:ecom/controllers/home_provider.dart';
 import 'package:ecom/models/home_screen/product_component/product_model.dart';
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:ecom/utils/custom_button.dart';
+import 'package:ecom/views/checkout_screen/checkout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -125,7 +124,7 @@ class _CartComponentState extends State<CartComponent> {
               text: 'Checkout',
               color: AppColor.buttonColor,
               textColor: Colors.black,
-              function: () {},
+              function: () => context.goNamed(CheckoutFirstScreen.routeName),
             )
           ],
         ),

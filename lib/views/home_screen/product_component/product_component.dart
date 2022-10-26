@@ -46,7 +46,7 @@ class _ProductComponentState extends State<ProductComponent> {
         children: [
           CategoryComponent(
             title: 'Shirt',
-            onTap: (item) => context.pushNamed(
+            onTap: (item) => context.goNamed(
               ProductItem.routeName,
               extra: <String, Object>{'item': item},
               params: <String, String>{
@@ -58,7 +58,7 @@ class _ProductComponentState extends State<ProductComponent> {
           CategoryComponent(
             title: 'Shoes',
             onTap: (item) {
-              context.pushNamed(
+              context.goNamed(
                 ProductItem.routeName,
                 extra: <String, Object>{'item': item},
                 params: <String, String>{
@@ -76,6 +76,7 @@ class _ProductComponentState extends State<ProductComponent> {
                 ProductItem.routeName,
                 extra: <String, Object>{'item': item},
                 params: <String, String>{
+                  'name': '${item.name.split(' ').join()}',
                 },
               ),
             ),

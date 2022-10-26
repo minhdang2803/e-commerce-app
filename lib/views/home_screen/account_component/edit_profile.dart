@@ -5,16 +5,30 @@ import 'package:ecom/utils/custom_button.dart';
 import 'package:ecom/utils/text_field_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
   static const String routeName = 'EditProfileScreen';
-  static MaterialPage page() {
-    return const MaterialPage(
-      child: EditProfileScreen(),
-      key: ValueKey(routeName),
+  static CustomTransitionPage page() {
+    return CustomTransitionPage<void>(
       name: routeName,
+      key: const ValueKey(routeName),
+      child: const EditProfileScreen(),
+      transitionsBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation, Widget child) =>
+          SlideTransition(
+        position: animation.drive(
+          Tween<Offset>(
+            begin: const Offset(-1.0, 0),
+            end: Offset.zero,
+          ).chain(
+            CurveTween(curve: Curves.linear),
+          ),
+        ),
+        child: child,
+      ),
     );
   }
 
