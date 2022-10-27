@@ -1,8 +1,10 @@
+import 'package:ecom/config/payment_screen.dart';
 import 'package:ecom/controllers/app_state.dart';
 import 'package:ecom/models/home_screen/product_component/product_model.dart';
 import 'package:ecom/views/checkout_screen/checkout3_screen.dart';
 import 'package:ecom/views/checkout_screen/checkout_screen.dart';
 import 'package:ecom/views/home_screen/account_component/account_component.dart';
+import 'package:ecom/views/home_screen/account_component/add_address_screen.dart';
 import 'package:ecom/views/home_screen/account_component/cards_screen.dart';
 import 'package:ecom/views/home_screen/account_component/digital_wallet_screen.dart';
 import 'package:ecom/views/home_screen/account_component/edit_profile.dart';
@@ -134,6 +136,13 @@ class MyRouter {
                 name: CheckoutThirdScreen.routeName,
                 pageBuilder: (context, state) => CheckoutThirdScreen.page(),
                 routes: [],
+              ),
+              GoRoute(
+                parentNavigatorKey: _rootNavigatorKey,
+                path: 'paymentpage',
+                name: PaymentInfo.routeName,
+                pageBuilder: (context, state) => PaymentInfo.page(),
+                routes: [],
               )
             ],
           ),
@@ -153,6 +162,12 @@ class MyRouter {
                 name: AddressScreen.routeName,
                 parentNavigatorKey: _rootNavigatorKey,
                 pageBuilder: (context, state) => AddressScreen.page(),
+              ),
+              GoRoute(
+                path: 'add_address',
+                name: AddAddressScreen.routeName,
+                parentNavigatorKey: _rootNavigatorKey,
+                pageBuilder: (context, state) => AddAddressScreen.page(),
               ),
               GoRoute(
                 path: 'cards',

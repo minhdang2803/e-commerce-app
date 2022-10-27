@@ -1,11 +1,6 @@
 import 'package:ecom/controllers/base_provider.dart';
 import 'package:ecom/models/home_screen/product_component/product_model.dart';
-import 'package:ecom/views/home_screen/cart_component/cart_component.dart';
-import 'package:ecom/views/home_screen/home_component/home_component.dart';
-import 'package:ecom/views/home_screen/product_component/product_component.dart';
-import 'package:flutter/material.dart';
 
-import '../views/home_screen/account_Component/account_component.dart';
 
 /*
 name

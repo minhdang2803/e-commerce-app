@@ -55,6 +55,10 @@ dependencies:
   shared_preferences: ^2.0.15
   image_pixels: ^3.0.0
   equatable: ^2.0.5
+  vnpay_flutter: ^1.0.1
+  crypto: ^3.0.2
+  webview_flutter: ^3.0.4
+
 
 dev_dependencies:
 

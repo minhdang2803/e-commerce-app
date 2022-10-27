@@ -9,3 +9,7 @@ export 'login_provider.dart';
 export 'base_provider.dart';
 export 'base_provider_model.dart';
 export 'profile_provider.dart';
+export 'home_provider.dart';
+export 'checkout_provider.dart';
+export 'reset_provider.dart';
+export 'register_provider.dart';

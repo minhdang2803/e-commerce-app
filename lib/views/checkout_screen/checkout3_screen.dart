@@ -1,3 +1,4 @@
+import 'package:ecom/config/payment_screen.dart';
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:ecom/utils/utils.dart';
@@ -90,7 +91,8 @@ class _CheckoutThirdScreenState extends State<CheckoutThirdScreen> {
           text: 'NEXT',
           color: AppColor.buttonColor,
           textColor: Colors.black,
-          function: () => context.pop(),
+          function: () => Navigator.push(
+              context, MaterialPageRoute(builder: (context) => PaymentInfo())),
         ),
       ],
     );

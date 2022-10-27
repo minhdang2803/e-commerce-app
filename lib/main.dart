@@ -6,7 +6,6 @@ import 'package:ecom/utils/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -18,9 +17,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //  GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
-  // Print path of pages in debug console
-  // GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
   bool isLoggedIn = await SharedPref.instance.getBool('isLoggedIn');
   // Run application
   final appState = AppState();
@@ -31,6 +27,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => HomeProvider()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (context) => CheckoutProvider()),
         Provider(create: (context) => MyRouter(appState, isLoggedIn)),
       ],
       child: const ECom(),
