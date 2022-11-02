@@ -3,7 +3,6 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:io';
 import 'payment_service.dart';
 import 'return_screen.dart';
-import 'return_url.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage(this.amount, {Key? key, required this.title})
@@ -18,7 +17,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) WebView.platform = AndroidWebView();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override

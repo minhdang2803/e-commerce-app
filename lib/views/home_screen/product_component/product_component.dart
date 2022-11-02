@@ -34,62 +34,72 @@ class _ProductComponentState extends State<ProductComponent> {
           10.verticalSpace,
           _buildSearchBar(context),
           20.verticalSpace,
-          _buildListView(context),
+          // _buildListView(context),
         ],
       ),
     );
   }
 
+  List<String> title = [
+    "Men's Bags",
+    "Men's Gloves",
+    "Men's Socks",
+    "Men's Hoodies",
+    "Men's Jackets",
+    "Men's Pants",
+    "Men's Basketball shoes",
+    "Men's Running shoes",
+    "Women's Bags",
+    "Women's Gloves",
+    "Women's Socks",
+    "Women's Hoodies",
+    "Women's Jackets",
+    "Women's Pants",
+    "Women's Basketball shoes",
+    "Women's Running shoes"
+  ];
+  List<String> urls = [
+    "men/accessories/bags",
+    "men/accessories/gloves",
+    "men/accessories/socks",
+    "men/clothing/hoodies",
+    "men/clothing/jackets",
+    "men/clothing/pants",
+    "men/shoes/basketball",
+    "men/shoes/running",
+    "woomen/accessories/bags",
+    "woomen/accessories/gloves",
+    "woomen/accessories/socks",
+    "woomen/clothing/hoodies",
+    "woomen/clothing/jackets",
+    "woomen/clothing/pants",
+    "woomen/shoes/basketball",
+    "woomen/shoes/running",
+  ];
   Widget _buildListView(BuildContext context) {
     return Expanded(
-      child: ListView(
-        children: [
-          CategoryComponent(
-            title: 'Shirt',
+      child: ListView.builder(
+        itemBuilder: (context, index) {
+          return CategoryComponent(
+            title: title[index],
             onTap: (item) => context.goNamed(
               ProductItem.routeName,
               extra: <String, Object>{'item': item},
               params: <String, String>{
-                'name': '${item.name.split(' ').join()}',
+                'name': '${item.productName.split(' ').join()}',
               },
             ),
-            future: context.read<HomeProvider>().mockAPIShirt(),
-          ),
-          CategoryComponent(
-            title: 'Shoes',
-            onTap: (item) {
-              context.goNamed(
-                ProductItem.routeName,
-                extra: <String, Object>{'item': item},
-                params: <String, String>{
-                  'name': '${item.name.split(' ').join()}',
-                },
-              );
-            },
-            future: context.read<HomeProvider>().mockAPIShoes(),
-          ),
-          CategoryComponent(
-            title: 'Pants',
-            onTap: (item) => Router.neglect(
-              context,
-              () => context.goNamed(
-                ProductItem.routeName,
-                extra: <String, Object>{'item': item},
-                params: <String, String>{
-                  'name': '${item.name.split(' ').join()}',
-                },
-              ),
-            ),
-            future: context.read<HomeProvider>().mockAPIPants(),
-          ),
-        ],
+            future: context.read<HomeProvider>().getData(urls[index]),
+          );
+        },
+        itemCount: 16,
       ),
     );
   }
 
   Widget _buildSearchBar(BuildContext contexxt) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.w),
+      padding: EdgeInsets.symmetric(horizontal: 15.w),
       child: Row(
         children: [
           Expanded(
@@ -155,12 +165,12 @@ class _SearchTextFieldState extends State<SearchTextField> {
           decoration: TextDecoration.none,
         ),
         onChanged: widget.onChanged,
-        textAlignVertical: TextAlignVertical.bottom,
+        textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: AppTypography.title.copyWith(
               color: widget.hintColor,
-              fontSize: 18,
+              fontSize: 15,
               decoration: TextDecoration.none,
               height: 0),
           prefixIcon: const Icon(
@@ -182,12 +192,3 @@ class _SearchTextFieldState extends State<SearchTextField> {
     );
   }
 }
-
-/*
-name
-imageURL: Link đến internetImage (imgur)
-description:
-price: (fake giá th được rồi)
-rate: (int: 1-5, fake th được rồi)
-promotion: (New product/ Discount/ cả hai)
-*/

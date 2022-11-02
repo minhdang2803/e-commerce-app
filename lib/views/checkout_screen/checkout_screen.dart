@@ -41,21 +41,24 @@ class CheckoutFirstScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            40.verticalSpace,
-            _buildMapProcess(context),
-            40.verticalSpace,
-            _buildOpions(context),
-            180.verticalSpace,
-            CustomButton(
-              text: 'NEXT',
-              color: AppColor.buttonColor,
-              function: () {
-                context.pushNamed(CheckoutSecondScreen.routeName);
-              },
-            )
-          ],
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              40.verticalSpace,
+              _buildMapProcess(context),
+              40.verticalSpace,
+              _buildOpions(context),
+              const Expanded(child: SizedBox()),
+              CustomButton(
+                text: 'NEXT',
+                color: AppColor.buttonColor,
+                function: () {
+                  context.pushNamed(CheckoutSecondScreen.routeName);
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

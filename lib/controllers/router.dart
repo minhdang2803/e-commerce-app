@@ -1,5 +1,6 @@
-import 'package:ecom/config/payment_screen.dart';
+import 'package:ecom/vnpay_config/payment_screen.dart';
 import 'package:ecom/controllers/app_state.dart';
+import 'package:ecom/models/home_screen/product_component/ecom_product_model.dart';
 import 'package:ecom/models/home_screen/product_component/product_model.dart';
 import 'package:ecom/views/checkout_screen/checkout3_screen.dart';
 import 'package:ecom/views/checkout_screen/checkout_screen.dart';
@@ -22,6 +23,7 @@ import 'package:ecom/views/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../models/home_screen/product_component/goods_model.dart';
 import '../views/checkout_screen/checkout2_screen.dart';
 import '../views/home_screen/home_screen.dart';
 
@@ -98,7 +100,7 @@ class MyRouter {
                 pageBuilder: (context, state) {
                   final Map<String, Object> extra =
                       state.extra! as Map<String, Object>;
-                  return ProductItem.page(extra['item'] as ProductItemModel);
+                  return ProductItem.page(extra['item'] as Goods);
                 },
               ),
             ],
@@ -140,8 +142,8 @@ class MyRouter {
               GoRoute(
                 parentNavigatorKey: _rootNavigatorKey,
                 path: 'paymentpage',
-                name: PaymentInfo.routeName,
-                pageBuilder: (context, state) => PaymentInfo.page(),
+                name: PaymentInfoScreen.routeName,
+                pageBuilder: (context, state) => PaymentInfoScreen.page(),
                 routes: [],
               )
             ],

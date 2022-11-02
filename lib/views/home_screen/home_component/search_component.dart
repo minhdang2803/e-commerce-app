@@ -15,7 +15,7 @@ class SearchBar extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: SizedBox(
           width: 320.w,
-          height: 40.h,
+          height: 35.h,
           child: Row(
             children: [
               Expanded(
@@ -24,7 +24,7 @@ class SearchBar extends StatelessWidget {
                   autocorrect: false,
                   style: AppTypography.title.copyWith(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 15,
                     decoration: TextDecoration.none,
                   ),
                   textAlignVertical: TextAlignVertical.bottom,
@@ -33,7 +33,7 @@ class SearchBar extends StatelessWidget {
                     hintText: 'Find your products',
                     hintStyle: AppTypography.title.copyWith(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 15,
                       decoration: TextDecoration.none,
                     ),
                     prefixIcon: const Icon(

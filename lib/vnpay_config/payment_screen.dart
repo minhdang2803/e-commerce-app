@@ -1,5 +1,6 @@
 import 'package:ecom/controllers/home_provider.dart';
-import 'package:ecom/models/home_screen/product_component/product_model.dart';
+import 'package:ecom/models/home_screen/product_component/ecom_product_model.dart';
+import 'package:ecom/models/home_screen/product_component/goods_model.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,14 +10,14 @@ import '../theme/app_color.dart';
 import '../utils/custom_button.dart';
 import 'vnpay.dart';
 
-class PaymentInfo extends StatefulWidget {
-  const PaymentInfo({Key? key}) : super(key: key);
+class PaymentInfoScreen extends StatefulWidget {
+  const PaymentInfoScreen({Key? key}) : super(key: key);
   static const routeName = 'PaymentInfo';
   static CustomTransitionPage page() {
     return CustomTransitionPage<void>(
       name: routeName,
       key: const ValueKey(routeName),
-      child: const PaymentInfo(),
+      child: const PaymentInfoScreen(),
       transitionsBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation, Widget child) =>
           SlideTransition(
@@ -34,10 +35,10 @@ class PaymentInfo extends StatefulWidget {
   }
 
   @override
-  State<PaymentInfo> createState() => PaymentInfoState();
+  State<PaymentInfoScreen> createState() => PaymentInfoScreenState();
 }
 
-class PaymentInfoState extends State<PaymentInfo> {
+class PaymentInfoScreenState extends State<PaymentInfoScreen> {
   final TextEditingController amountController = TextEditingController();
   bool isDropdown = true;
 
@@ -240,7 +241,7 @@ class PaymentInfoState extends State<PaymentInfo> {
 
 class ProductDropdown extends StatelessWidget {
   const ProductDropdown({super.key, required this.itemModel});
-  final ProductItemModel itemModel;
+  final Goods itemModel;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -256,8 +257,8 @@ class ProductDropdown extends StatelessWidget {
           10.horizontalSpace,
           ClipRRect(
             borderRadius: BorderRadius.circular(20.r),
-            child: Image.asset(
-              itemModel.imageURL,
+            child: Image.network(
+              itemModel.imgUrl,
               width: 100.w,
               height: 80.h,
               fit: BoxFit.cover,
@@ -271,9 +272,9 @@ class ProductDropdown extends StatelessWidget {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: Text(itemModel.name, style: AppTypography.body),
+                  child: Text(itemModel.productName, style: AppTypography.body),
                 ),
-                Text('\$${itemModel.price}', style: AppTypography.body),
+                Text('\$${itemModel.truePrice}', style: AppTypography.body),
                 _buildQuantity(context, itemModel)
               ],
             ),
@@ -283,7 +284,7 @@ class ProductDropdown extends StatelessWidget {
     );
   }
 
-  Widget _buildQuantity(BuildContext context, ProductItemModel item) {
+  Widget _buildQuantity(BuildContext context, Goods item) {
     return Row(
       children: [
         Text(

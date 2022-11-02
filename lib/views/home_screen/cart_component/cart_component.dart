@@ -1,5 +1,5 @@
 import 'package:ecom/controllers/home_provider.dart';
-import 'package:ecom/models/home_screen/product_component/product_model.dart';
+import 'package:ecom/models/home_screen/product_component/goods_model.dart';
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:ecom/utils/custom_button.dart';
@@ -135,7 +135,7 @@ class _CartComponentState extends State<CartComponent> {
 
 class ProductCard extends StatelessWidget {
   const ProductCard({super.key, required this.itemModel});
-  final ProductItemModel itemModel;
+  final Goods itemModel;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -151,8 +151,8 @@ class ProductCard extends StatelessWidget {
           10.horizontalSpace,
           ClipRRect(
             borderRadius: BorderRadius.circular(20.r),
-            child: Image.asset(
-              itemModel.imageURL,
+            child: Image.network(
+              itemModel.imgUrl,
               width: 100.w,
               height: 80.h,
               fit: BoxFit.cover,
@@ -166,9 +166,9 @@ class ProductCard extends StatelessWidget {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: Text(itemModel.name, style: AppTypography.body),
+                  child: Text(itemModel.productName, style: AppTypography.body),
                 ),
-                Text('\$${itemModel.price}', style: AppTypography.body),
+                Text('\$${itemModel.truePrice}', style: AppTypography.body),
                 _buildQuantity(context, itemModel)
               ],
             ),
@@ -178,7 +178,7 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _buildQuantity(BuildContext context, ProductItemModel item) {
+  Widget _buildQuantity(BuildContext context, Goods item) {
     return Row(
       children: [
         IconButton(

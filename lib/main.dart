@@ -1,5 +1,6 @@
 import 'package:ecom/controllers/controllers.dart';
 import 'package:ecom/controllers/home_provider.dart';
+import 'package:ecom/data/hive_config.dart';
 import 'package:ecom/theme/app_theme.dart';
 import 'package:ecom/utils/restart_util.dart';
 import 'package:ecom/utils/shared_preference.dart';
@@ -17,6 +18,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  //Connect Hive local storage
+  await HiveConfig().init();
   bool isLoggedIn = await SharedPref.instance.getBool('isLoggedIn');
   // Run application
   final appState = AppState();

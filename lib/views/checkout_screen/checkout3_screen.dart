@@ -1,4 +1,4 @@
-import 'package:ecom/config/payment_screen.dart';
+import 'package:ecom/vnpay_config/payment_screen.dart';
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:ecom/utils/utils.dart';
@@ -58,14 +58,15 @@ class _CheckoutThirdScreenState extends State<CheckoutThirdScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
           child: Column(
             children: [
               40.verticalSpace,
               _buildMapProcess(context),
               20.verticalSpace,
               _buildTextFields(context),
-              20.verticalSpace,
+              const Expanded(child: SizedBox()),
               _buildCustomButton(context),
               20.verticalSpace,
             ],
@@ -92,7 +93,9 @@ class _CheckoutThirdScreenState extends State<CheckoutThirdScreen> {
           color: AppColor.buttonColor,
           textColor: Colors.black,
           function: () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => PaymentInfo())),
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const PaymentInfoScreen())),
         ),
       ],
     );

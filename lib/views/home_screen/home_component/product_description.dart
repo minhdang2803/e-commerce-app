@@ -1,3 +1,5 @@
+import 'package:ecom/models/home_screen/product_component/ecom_product_model.dart';
+import 'package:ecom/models/home_screen/product_component/goods_model.dart';
 import 'package:ecom/models/home_screen/product_component/product_model.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProductDescriptionScreen extends StatelessWidget {
   const ProductDescriptionScreen({super.key, required this.product});
-  final ProductItemModel product;
+  final Goods product;
   static const String routeName = "ProductDescriptionScreen";
-  static MaterialPage page(ProductItemModel item) {
+  static MaterialPage page(Goods item) {
     return MaterialPage(
       child: ProductDescriptionScreen(product: item),
       name: routeName,
@@ -20,7 +22,7 @@ class ProductDescriptionScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          product.name,
+          product.productName,
           style: AppTypography.title.copyWith(
             color: Colors.black,
           ),

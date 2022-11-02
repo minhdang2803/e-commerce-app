@@ -59,7 +59,7 @@ class _HomeComponentState extends State<HomeComponent> {
               'assets/home_screen/ads2.png'
             ],
           ),
-          const ShoppingComponent()
+          ShoppingComponent()
         ],
       ),
     );
@@ -67,7 +67,7 @@ class _HomeComponentState extends State<HomeComponent> {
 }
 
 class ShoppingComponent extends StatelessWidget {
-  const ShoppingComponent({super.key});
+  ShoppingComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class ShoppingComponent extends StatelessWidget {
       left: 0,
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: 370.h,
+        height: 350.h,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -84,51 +84,64 @@ class ShoppingComponent extends StatelessWidget {
             topRight: Radius.circular(20.r),
           ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              CategoryComponent(
-                title: 'Shirt',
-                onTap: (item) => context.pushNamed(
-                  ProductItem.routeName,
-                  extra: <String, Object>{'item': item},
-                  params: <String, String>{
-                    'name': '${item.name.split(' ').join()}',
-                  },
-                ),
-                future: context.read<HomeProvider>().mockAPIShirt(),
-              ),
-              CategoryComponent(
-                title: 'Shoes',
-                onTap: (item) {
-                  context.pushNamed(
-                    ProductItem.routeName,
-                    extra: <String, Object>{'item': item},
-                    params: <String, String>{
-                      'name': '${item.name.split(' ').join()}',
-                    },
-                  );
-                },
-                future: context.read<HomeProvider>().mockAPIShoes(),
-              ),
-              CategoryComponent(
-                title: 'Pants',
-                onTap: (item) => Router.neglect(
-                  context,
-                  () => context.goNamed(
-                    ProductItem.routeName,
-                    extra: <String, Object>{'item': item},
-                    params: <String, String>{
-                      'name': '${item.name.split(' ').join()}',
-                    },
-                  ),
-                ),
-                future: context.read<HomeProvider>().mockAPIPants(),
-              ),
-            ],
-          ),
-        ),
+        child: _buildListView(context),
       ),
+    );
+  }
+
+  List<String> title = [
+    "Men's Bags",
+    "Men's Gloves",
+    "Men's Socks",
+    "Men's Hoodies",
+    "Men's Jackets",
+    "Men's Pants",
+    "Men's Basketball shoes",
+    "Men's Running shoes",
+    "Women's Bags",
+    "Women's Gloves",
+    "Women's Socks",
+    "Women's Hoodies",
+    "Women's Jackets",
+    "Women's Pants",
+    "Women's Basketball shoes",
+    "Women's Running shoes"
+  ];
+  List<String> urls = [
+    "men/accessories/bags",
+    "men/accessories/gloves",
+    "men/accessories/socks",
+    "men/clothing/hoodies",
+    "men/clothing/jackets",
+    "men/clothing/pants",
+    "men/shoes/basketball",
+    "men/shoes/running",
+    "woomen/accessories/bags",
+    "woomen/accessories/gloves",
+    "woomen/accessories/socks",
+    "woomen/clothing/hoodies",
+    "woomen/clothing/jackets",
+    "woomen/clothing/pants",
+    "woomen/shoes/basketball",
+    "woomen/shoes/running",
+  ];
+  Widget _buildListView(BuildContext context) {
+    return ListView.separated(
+      itemBuilder: (context, index) {
+        return CategoryComponent(
+          title: title[index],
+          onTap: (item) => context.goNamed(
+            ProductItem.routeName,
+            extra: <String, Object>{'item': item},
+            params: <String, String>{
+              'name': '${item.productName.split(' ').join()}',
+            },
+          ),
+          future: context.read<HomeProvider>().getData(urls[index]),
+        );
+      },
+      separatorBuilder: (context, index) => 20.verticalSpace,
+      itemCount: 16,
     );
   }
 }
@@ -142,7 +155,7 @@ class CategoryComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+      padding: EdgeInsets.only(left: 20.w, right: 20.w),
       height: MediaQuery.of(context).size.height * 0.25,
       width: MediaQuery.of(context).size.width,
       child: Column(
@@ -182,7 +195,7 @@ class CategoryComponent extends StatelessWidget {
                         return GestureDetector(
                           onTap: () => onTap!(item),
                           child: ItemComponent(
-                            imageUrl: item.imageURL,
+                            imageUrl: item.imgUrl,
                           ),
                         );
                       },
@@ -209,13 +222,10 @@ class ItemComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20.r),
-      child: Image(
-        image: AssetImage(
+        borderRadius: BorderRadius.circular(20.r),
+        child: Image.network(
           imageUrl,
-        ),
-        fit: BoxFit.cover,
-      ),
-    );
+          fit: BoxFit.cover,
+        ));
   }
 }
