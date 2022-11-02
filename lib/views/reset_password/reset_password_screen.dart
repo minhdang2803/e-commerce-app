@@ -29,7 +29,7 @@ class ResetPassword extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => ResetPasswordProvider(),
       builder: (context, child) {
-        return Consumer<RegisterProvider>(
+        return Consumer<ResetPasswordProvider>(
           builder: (context, value, child) {
             if (value.viewState == ViewState.loading) {
               WidgetsBinding.instance.addPostFrameCallback(
@@ -96,21 +96,19 @@ class ResetPassword extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.primary,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              right: 0,
-              child: SvgPicture.asset('assets/auth/login_oval.svg'),
-            ),
-            _buildBackButton(context),
-            _buildWelcomeText(context),
-            ResetPasswordComponent(
-              email: context.read<ResetPasswordProvider>().instance.email,
-            ),
-          ],
-        ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            right: 0,
+            child: SvgPicture.asset('assets/auth/login_oval.svg'),
+          ),
+          _buildBackButton(context),
+          _buildWelcomeText(context),
+          ResetPasswordComponent(
+            email: context.read<ResetPasswordProvider>().instance.email,
+          ),
+        ],
       ),
     );
   }

@@ -62,7 +62,7 @@ class _ProductComponentState extends State<ProductComponent> {
                   ProductItem.routeName,
                   extra: <String, Object>{'item': item},
                   params: <String, String>{
-                    'name': '${item.productName.split(' ').join()}',
+                    'name': item.productName.split(' ').join(),
                   },
                 );
               },
