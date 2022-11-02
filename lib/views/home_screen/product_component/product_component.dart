@@ -1,12 +1,14 @@
+import 'package:ecom/controllers/home_provider.dart';
 import 'package:ecom/theme/app_color.dart';
+import 'package:ecom/views/checkout_screen/order_list_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../controllers/home_provider.dart';
+import '../../../models/home_screen/product_component/goods_model.dart';
 import '../../../theme/app_font.dart';
-import '../home_component/home_component.dart';
 import '../home_component/product_item.dart';
 
 class ProductComponent extends StatefulWidget {
@@ -26,6 +28,14 @@ class ProductComponent extends StatefulWidget {
 
 class _ProductComponentState extends State<ProductComponent> {
   final TextEditingController _controller = TextEditingController();
+  late List<Goods> valueList;
+  List<Goods> displayList = [];
+  @override
+  void initState() {
+    super.initState();
+    valueList = context.read<HomeProvider>().getLocalData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -35,64 +45,44 @@ class _ProductComponentState extends State<ProductComponent> {
           _buildSearchBar(context),
           20.verticalSpace,
           // _buildListView(context),
+          displayList.isEmpty ? _buildEmptyCart() : _buildContent(context)
         ],
       ),
     );
   }
 
-  List<String> title = [
-    "Men's Bags",
-    "Men's Gloves",
-    "Men's Socks",
-    "Men's Hoodies",
-    "Men's Jackets",
-    "Men's Pants",
-    "Men's Basketball shoes",
-    "Men's Running shoes",
-    "Women's Bags",
-    "Women's Gloves",
-    "Women's Socks",
-    "Women's Hoodies",
-    "Women's Jackets",
-    "Women's Pants",
-    "Women's Basketball shoes",
-    "Women's Running shoes"
-  ];
-  List<String> urls = [
-    "men/accessories/bags",
-    "men/accessories/gloves",
-    "men/accessories/socks",
-    "men/clothing/hoodies",
-    "men/clothing/jackets",
-    "men/clothing/pants",
-    "men/shoes/basketball",
-    "men/shoes/running",
-    "woomen/accessories/bags",
-    "woomen/accessories/gloves",
-    "woomen/accessories/socks",
-    "woomen/clothing/hoodies",
-    "woomen/clothing/jackets",
-    "woomen/clothing/pants",
-    "woomen/shoes/basketball",
-    "woomen/shoes/running",
-  ];
-  Widget _buildListView(BuildContext context) {
+  Widget _buildContent(BuildContext context) {
     return Expanded(
       child: ListView.builder(
         itemBuilder: (context, index) {
-          return CategoryComponent(
-            title: title[index],
-            onTap: (item) => context.goNamed(
-              ProductItem.routeName,
-              extra: <String, Object>{'item': item},
-              params: <String, String>{
-                'name': '${item.productName.split(' ').join()}',
+          final item = displayList[index];
+          return GestureDetector(
+              onTap: () {
+                context.goNamed(
+                  ProductItem.routeName,
+                  extra: <String, Object>{'item': item},
+                  params: <String, String>{
+                    'name': '${item.productName.split(' ').join()}',
+                  },
+                );
               },
-            ),
-            future: context.read<HomeProvider>().getData(urls[index]),
-          );
+              child: ProductDropdown(itemModel: item));
         },
-        itemCount: 16,
+        itemCount: displayList.length,
+      ),
+    );
+  }
+
+  Widget _buildEmptyCart() {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.65,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset('assets/home_screen/empty-card.svg'),
+          10.verticalSpace,
+          Text('Nothing Found', style: AppTypography.title)
+        ],
       ),
     );
   }
@@ -109,7 +99,21 @@ class _ProductComponentState extends State<ProductComponent> {
               hintColor: Colors.grey,
               textColor: AppColor.textPrimary,
               hintText: 'Find your products',
-              onChanged: (value) {},
+              onChanged: (value) {
+                if (value == '') {
+                  setState(() {
+                    displayList = [];
+                  });
+                } else {
+                  setState(() {
+                    displayList = valueList
+                        .where((element) => element.productName
+                            .toLowerCase()
+                            .contains(value!.toLowerCase()))
+                        .toList();
+                  });
+                }
+              },
             ),
           ),
           IconButton(

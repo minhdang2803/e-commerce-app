@@ -7,6 +7,7 @@ import 'package:ecom/utils/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -46,6 +47,12 @@ class ECom extends StatefulWidget {
 }
 
 class _EComState extends State<ECom> {
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final router = Provider.of<MyRouter>(context, listen: false).myRouter;

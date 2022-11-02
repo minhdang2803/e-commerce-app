@@ -114,7 +114,7 @@ class AdsCard extends StatelessWidget {
           ),
         ),
         Container(
-          width: 22.r,
+          width: 10.r,
           color: color,
         ),
         Image.asset(

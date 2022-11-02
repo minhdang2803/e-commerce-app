@@ -19,7 +19,6 @@ class PaymentService {
     try {
       response = await _dio.get(vnpUrl);
     } on DioError catch (e) {
-      print(e.message);
       throw Exception(e.message);
     }
     return response;
@@ -31,7 +30,6 @@ class PaymentService {
       response = await _dio.post(vnpUrl,
           options: Options(responseType: ResponseType.stream));
     } on DioError catch (e) {
-      print(e.message);
       throw Exception(e.message);
     }
     return response;

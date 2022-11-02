@@ -70,27 +70,25 @@ class HomeProvider extends BaseProvider {
 
   Future<dynamic> getData(String path) async {
     List<Goods> result = [];
-    int index = 0;
     final snapshot = await ref.child(path).get();
     if (snapshot.exists) {
       final data = jsonDecode(jsonEncode(snapshot.value));
       result = List.from(data).map((e) {
         var element = Goods.fromJson(e);
-        // final myBox = Hive.box<Goods>(HiveConfig.goodsBox);
-        // myBox.put('path_$index', e);
+        final myBox = Hive.box<Goods>(HiveConfig.goodsBox);
+        myBox.put(element.id, element);
         return element;
       }).toList();
-      index = 0;
     }
     return result;
   }
 
-  Future<List<Goods>> getLocalData() async {
+  List<Goods> getLocalData() {
     List<Goods> result = [];
     final myBox = Hive.box<Goods>(HiveConfig.goodsBox);
     final myValue = myBox.values;
-    await Future.delayed(const Duration(milliseconds: 500));
+    // await Future.delayed(const Duration(milliseconds: 500));
     result.addAll(myValue.map((e) => e));
-    return Future.value(result);
+    return result;
   }
 }
