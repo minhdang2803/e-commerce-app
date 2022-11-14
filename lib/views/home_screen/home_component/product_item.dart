@@ -158,7 +158,7 @@ class _ProductItemState extends State<ProductItem> {
             ),
           ),
           Text(
-            '${widget.productItem.truePrice} \$',
+            '${int.parse(widget.productItem.truePrice) * 24873} VNĐ',
             style: AppTypography.body.copyWith(color: Colors.red),
           )
         ],

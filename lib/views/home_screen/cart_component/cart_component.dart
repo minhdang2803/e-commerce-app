@@ -115,7 +115,7 @@ class _CartComponentState extends State<CartComponent> {
                   'Total Price:',
                   style: AppTypography.title.copyWith(color: Colors.black),
                 ),
-                Text('\$ ${context.watch<HomeProvider>().getTotalPrice()}',
+                Text('${context.watch<HomeProvider>().getTotalPrice()} VNĐ',
                     style: AppTypography.body.copyWith(color: Colors.red)),
               ],
             ),

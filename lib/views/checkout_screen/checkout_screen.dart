@@ -49,7 +49,9 @@ class CheckoutFirstScreen extends StatelessWidget {
               _buildMapProcess(context),
               40.verticalSpace,
               _buildOpions(context),
-              const Expanded(child: SizedBox()),
+              SizedBox(
+                height: 140.h,
+              ),
               CustomButton(
                 text: 'NEXT',
                 color: AppColor.buttonColor,

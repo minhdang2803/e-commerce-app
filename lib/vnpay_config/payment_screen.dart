@@ -99,7 +99,7 @@ class PaymentInfoScreenState extends State<PaymentInfoScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    final value = (provider.getTotalPrice() * 24845).toInt();
+                    final value = (provider.getTotalPrice()).toInt();
 
                     return MyHomePage(
                       title: 'Payment',

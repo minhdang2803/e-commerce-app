@@ -115,15 +115,7 @@ class MyRouter {
                 path: 'checkout1',
                 name: CheckoutFirstScreen.routeName,
                 pageBuilder: (context, state) => CheckoutFirstScreen.page(),
-                routes: [
-                  // GoRoute(
-                  //   parentNavigatorKey: _shellNavigatorKey,
-                  //   path: 'checkout2',
-                  //   name: CheckoutSecondScreen.routeName,
-                  //   builder: (context, state) => CheckoutSecondScreen(),
-                  //   routes: [],
-                  // )
-                ],
+                routes: [],
               ),
               GoRoute(
                 parentNavigatorKey: _rootNavigatorKey,

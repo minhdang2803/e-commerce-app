@@ -54,13 +54,14 @@ class HomeProvider extends BaseProvider {
 
   double getTotalPrice() {
     return cart.fold(
-      0,
-      (previousValue, element) {
-        int? totalProduct = numberOfItem[element.id];
-        return previousValue +=
-            int.parse(element.truePrice) * (totalProduct ?? 1);
-      },
-    );
+          0,
+          (previousValue, element) {
+            int? totalProduct = numberOfItem[element.id];
+            return previousValue +=
+                int.parse(element.truePrice) * (totalProduct ?? 1);
+          },
+        ) *
+        24873;
   }
 
   void clearCart() {

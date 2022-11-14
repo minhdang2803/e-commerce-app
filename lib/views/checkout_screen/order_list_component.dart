@@ -43,7 +43,8 @@ class ProductDropdown extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: Text(itemModel.productName, style: AppTypography.body),
                 ),
-                Text('\$${itemModel.truePrice}', style: AppTypography.body),
+                Text('${int.parse(itemModel.truePrice) * 24873} VNĐ',
+                    style: AppTypography.body),
                 (isCheckout ? _buildQuantity(context, itemModel) : Container())
               ],
             ),
