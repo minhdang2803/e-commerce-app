@@ -6,7 +6,7 @@ class DatabaseService {
 
   // reference for our collections
   final CollectionReference userHistoryCollection =
-      FirebaseFirestore.instance.collection("histories");
+      FirebaseFirestore.instance.collection("users");
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection("groups");
 

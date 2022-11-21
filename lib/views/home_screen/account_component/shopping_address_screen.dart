@@ -65,15 +65,13 @@ class AddressScreen extends StatelessWidget {
   }
 
   Widget _buildEmptyCart() {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset('assets/home_screen/empty-card.svg'),
-          10.verticalSpace,
-          Text('No address added', style: AppTypography.title)
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset('assets/home_screen/empty-card.svg'),
+        10.verticalSpace,
+        Text('No address added', style: AppTypography.title)
+      ],
     );
   }
 

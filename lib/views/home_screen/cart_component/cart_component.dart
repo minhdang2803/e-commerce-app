@@ -170,7 +170,9 @@ class ProductCard extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: Text(itemModel.productName, style: AppTypography.body),
                 ),
-                Text('\$${itemModel.truePrice}', style: AppTypography.body),
+                Text(
+                    '${(int.parse(itemModel.truePrice) * 24842).toString().parseMoney()}đ',
+                    style: AppTypography.body),
                 _buildQuantity(context, itemModel)
               ],
             ),

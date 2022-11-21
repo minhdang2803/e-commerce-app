@@ -19,11 +19,14 @@ class CheckoutProvider extends BaseProvider {
   Future<void> addAddress(AddressModel address) async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final CollectionReference userHistoryCollection =
-        FirebaseFirestore.instance.collection("histories");
+        FirebaseFirestore.instance.collection("users");
     final DocumentReference document = userHistoryCollection.doc(uid);
     await document.update({
       'addresses': FieldValue.arrayUnion([
-        {'title': address.title, 'address': address.address}
+        {
+          'title': address.title,
+          'address': address.address,
+        }
       ])
     });
     notifyListeners();
@@ -36,7 +39,7 @@ class CheckoutProvider extends BaseProvider {
     };
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final CollectionReference userHistoryCollection =
-        FirebaseFirestore.instance.collection("histories");
+        FirebaseFirestore.instance.collection("users");
     final DocumentReference document = userHistoryCollection.doc(uid);
     await document.update({
       "addresses": FieldValue.arrayRemove([deleteElement]),
@@ -48,15 +51,16 @@ class CheckoutProvider extends BaseProvider {
     List<AddressModel> address = [];
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final CollectionReference userHistoryCollection =
-        FirebaseFirestore.instance.collection("histories");
+        FirebaseFirestore.instance.collection("users");
     final DocumentReference document = userHistoryCollection.doc(uid);
     await document.get().then((value) {
-      final data = value.data() as Map<String, dynamic>;
-      for (var element in data['addresses']) {
-        address.add(AddressModel.fromJson(element));
+      Map<String, dynamic>? data = value.data() as Map<String, dynamic>?;
+      if (data != null) {
+        for (var element in data['addresses']) {
+          address.add(AddressModel.fromJson(element));
+        }
       }
     });
-
     return Future.value(address);
   }
 }

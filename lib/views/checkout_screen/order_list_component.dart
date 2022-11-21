@@ -1,5 +1,6 @@
 import 'package:ecom/models/home_screen/product_component/goods_model.dart';
 import 'package:ecom/theme/app_font.dart';
+import 'package:ecom/utils/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,8 @@ class ProductDropdown extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: Text(itemModel.productName, style: AppTypography.body),
                 ),
-                Text('${int.parse(itemModel.truePrice) * 24873} VNĐ',
+                Text(
+                    '${(int.parse(itemModel.truePrice) * 24873).toString().parseMoney()}đ',
                     style: AppTypography.body),
                 (isCheckout ? _buildQuantity(context, itemModel) : Container())
               ],

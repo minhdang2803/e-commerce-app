@@ -5,6 +5,7 @@ import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -57,7 +58,7 @@ class OrderHistoryScreen extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               } else {
-                if (snapshot.hasData) {
+                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   return ListView.separated(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
@@ -70,18 +71,24 @@ class OrderHistoryScreen extends StatelessWidget {
                     separatorBuilder: (context, index) => 10.verticalSpace,
                   );
                 } else {
-                  return Center(
-                    child: Text(
-                      'No histories',
-                      style: AppTypography.title.copyWith(color: Colors.black),
-                    ),
-                  );
+                  return Center(child: _buildEmptyCart());
                 }
               }
             },
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildEmptyCart() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset('assets/home_screen/empty-card.svg'),
+        10.verticalSpace,
+        Text('No Histories!', style: AppTypography.title)
+      ],
     );
   }
 }
@@ -111,6 +118,9 @@ class HistoryInfo extends StatelessWidget {
           primary: false,
           itemBuilder: (context, index) {
             final currentCard = cardModels[index];
+            if (cardModels.isEmpty) {
+              return _buildEmptyCart();
+            }
             return HistoryCard(
               title: currentCard.title,
               price: currentCard.price,
@@ -120,6 +130,17 @@ class HistoryInfo extends StatelessWidget {
           separatorBuilder: (context, index) => 5.verticalSpace,
           itemCount: cardModels.length,
         )
+      ],
+    );
+  }
+
+  Widget _buildEmptyCart() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset('assets/home_screen/empty-card.svg'),
+        10.verticalSpace,
+        Text('No Histories!', style: AppTypography.title)
       ],
     );
   }

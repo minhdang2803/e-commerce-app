@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecom/controllers/base_provider.dart';
 import 'package:ecom/data/hive_config.dart';
-import 'package:ecom/models/checkout_feature/address_model.dart';
 import 'package:ecom/models/home_screen/account_component/history_info_model.dart';
 import 'package:ecom/utils/string_extension.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -77,7 +76,7 @@ class HomeProvider extends BaseProvider {
     List<Map<String, dynamic>> listOfGood = [];
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final CollectionReference userHistoryCollection =
-        FirebaseFirestore.instance.collection("histories");
+        FirebaseFirestore.instance.collection("users");
     final DocumentReference document = userHistoryCollection.doc(uid);
     final timeNow = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
 
@@ -102,12 +101,14 @@ class HomeProvider extends BaseProvider {
     List<HistoryInfoModel> result = [];
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final CollectionReference userHistoryCollection =
-        FirebaseFirestore.instance.collection("histories");
+        FirebaseFirestore.instance.collection("users");
     final DocumentReference document = userHistoryCollection.doc(uid);
     await document.get().then((value) {
-      final data = value.data() as Map<String, dynamic>;
-      for (var element in data['histories']) {
-        result.add(HistoryInfoModel.fromJson(element));
+      Map<String,dynamic>? data = value.data() as Map<String, dynamic>?;
+      if (data != null) {
+        for (var element in data['histories']) {
+          result.add(HistoryInfoModel.fromJson(element));
+        }
       }
     });
     return Future.value(result);
@@ -128,8 +129,6 @@ class HomeProvider extends BaseProvider {
     }
     return result;
   }
-
-  
 
   List<Goods> getLocalData() {
     List<Goods> result = [];

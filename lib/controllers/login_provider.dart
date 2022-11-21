@@ -1,4 +1,5 @@
 import 'package:ecom/controllers/base_provider.dart';
+import 'package:ecom/helper/database_services.dart';
 import 'package:ecom/utils/shared_preference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -45,8 +46,11 @@ class LoginProvider extends BaseProvider {
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        SharedPref.instance.setBool('isLoggedIn', true);
         await FirebaseAuth.instance.signInWithCredential(credential);
+        final currentUser = FirebaseAuth.instance.currentUser!;
+        DatabaseService(uid: currentUser.uid)
+            .savingUserData(currentUser.displayName!, currentUser.email!);
+        SharedPref.instance.setBool('isLoggedIn', true);
       }
       setStatus(ViewState.done, notify: true);
     } on PlatformException catch (exception) {
@@ -67,11 +71,12 @@ class LoginProvider extends BaseProvider {
   }
 
   Future logoutGoogle() async {
-    FirebaseAuth.instance.signOut();
-
-    if (FirebaseAuth.instance.currentUser != null) {
-      await googleSignIn.disconnect();
+    final userData =
+        FirebaseAuth.instance.currentUser!.providerData[0].providerId;
+    if (userData != 'password') {
+      await googleSignIn.disconnect().catchError(() {});
     }
+    FirebaseAuth.instance.signOut();
 
     setStatus(ViewState.none, notify: true);
   }
