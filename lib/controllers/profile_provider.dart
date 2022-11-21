@@ -1,4 +1,5 @@
 import 'package:ecom/controllers/base_provider.dart';
+import 'package:ecom/models/home_screen/account_component/history_card_model.dart';
 
 import '../models/models.dart';
 

@@ -1,4 +1,5 @@
 import 'package:ecom/controllers/controllers.dart';
+import 'package:ecom/helper/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +30,7 @@ class RegisterProvider extends BaseProvider {
       isCancel = false;
       isPop = false;
       setStatus(ViewState.loading, notify: true);
-      await FirebaseAuth.instance
+      final user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
         email: registerInstance.email.text,
         password: registerInstance.password.text,
@@ -37,6 +38,9 @@ class RegisterProvider extends BaseProvider {
           .whenComplete(() async {
         FirebaseAuth.instance.currentUser!
             .updateDisplayName(registerInstance.username.text);
+        DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+            .savingUserData(
+                registerInstance.username.text, registerInstance.email.text);
         FirebaseAuth.instance.currentUser!.sendEmailVerification();
       }).catchError((error) {
         setErrorMessage('Register failed');

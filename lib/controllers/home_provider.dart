@@ -1,11 +1,15 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecom/controllers/base_provider.dart';
 import 'package:ecom/data/hive_config.dart';
-import 'package:ecom/models/home_screen/product_component/ecom_product_model.dart';
+import 'package:ecom/models/checkout_feature/address_model.dart';
+import 'package:ecom/models/home_screen/account_component/history_info_model.dart';
+import 'package:ecom/utils/string_extension.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 
 import '../models/home_screen/product_component/goods_model.dart';
 
@@ -69,6 +73,47 @@ class HomeProvider extends BaseProvider {
     numberOfItem = {};
   }
 
+  Future<void> addHistory(List<Goods> goods) async {
+    List<Map<String, dynamic>> listOfGood = [];
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final CollectionReference userHistoryCollection =
+        FirebaseFirestore.instance.collection("histories");
+    final DocumentReference document = userHistoryCollection.doc(uid);
+    final timeNow = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
+
+    for (var element in goods) {
+      listOfGood.add({
+        "price": (int.parse(element.truePrice) * 24873).toString().parseMoney(),
+        "status": 'waiting',
+        "title": element.productName
+      });
+    }
+
+    await document.update(
+      {
+        "histories": FieldValue.arrayUnion([
+          {"time": timeNow, "history_card": listOfGood}
+        ])
+      },
+    );
+  }
+
+  Future<List<HistoryInfoModel>> getHistory() async {
+    List<HistoryInfoModel> result = [];
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final CollectionReference userHistoryCollection =
+        FirebaseFirestore.instance.collection("histories");
+    final DocumentReference document = userHistoryCollection.doc(uid);
+    await document.get().then((value) {
+      final data = value.data() as Map<String, dynamic>;
+      for (var element in data['histories']) {
+        result.add(HistoryInfoModel.fromJson(element));
+      }
+    });
+    return Future.value(result);
+  }
+
+  // 9704198526191432198
   Future<dynamic> getData(String path) async {
     List<Goods> result = [];
     final snapshot = await ref.child(path).get();
@@ -83,6 +128,8 @@ class HomeProvider extends BaseProvider {
     }
     return result;
   }
+
+  
 
   List<Goods> getLocalData() {
     List<Goods> result = [];

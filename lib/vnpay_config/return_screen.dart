@@ -43,6 +43,8 @@ class ReturnScreen extends StatelessWidget {
             function: () {
               Navigator.pop(context);
               Navigator.pop(context);
+              final provider = context.read<HomeProvider>();
+              context.read<HomeProvider>().addHistory(provider.cart.toList());
               context.read<HomeProvider>().clearCart();
               context.goNamed(HomeComponent.routeName);
             },

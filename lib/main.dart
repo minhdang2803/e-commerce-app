@@ -4,6 +4,7 @@ import 'package:ecom/data/hive_config.dart';
 import 'package:ecom/theme/app_theme.dart';
 import 'package:ecom/utils/restart_util.dart';
 import 'package:ecom/utils/shared_preference.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

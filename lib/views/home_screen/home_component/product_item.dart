@@ -2,6 +2,7 @@ import 'package:ecom/controllers/home_provider.dart';
 import 'package:ecom/models/home_screen/product_component/goods_model.dart';
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
+import 'package:ecom/utils/string_extension.dart';
 import 'package:ecom/utils/utils.dart';
 import 'package:ecom/views/home_screen/cart_component/cart_component.dart';
 import 'package:ecom/views/home_screen/home_component/home_component.dart';
@@ -139,6 +140,7 @@ class _ProductItemState extends State<ProductItem> {
   }
 
   Widget _buildInfo(BuildContext context) {
+    final clm = int.parse(widget.productItem.truePrice) * 24873;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.r),
       child: Column(
@@ -158,7 +160,7 @@ class _ProductItemState extends State<ProductItem> {
             ),
           ),
           Text(
-            '${int.parse(widget.productItem.truePrice) * 24873} VNĐ',
+            '${clm.toString().parseMoney('.')} VNĐ',
             style: AppTypography.body.copyWith(color: Colors.red),
           )
         ],

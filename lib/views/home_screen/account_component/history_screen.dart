@@ -1,5 +1,6 @@
 import 'package:ecom/controllers/controllers.dart';
 import 'package:ecom/extension/extensions.dart';
+import 'package:ecom/models/home_screen/account_component/history_card_model.dart';
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:flutter/material.dart';
@@ -48,16 +49,36 @@ class OrderHistoryScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(20.r),
-          child: ListView.separated(
-            itemCount: provider.historyInfos.length,
-            itemBuilder: (context, index) {
-              final info = provider.historyInfos[index];
-              return HistoryInfo(
-                time: info.time,
-                cardModels: info.historyCardModel,
-              );
+          child: FutureBuilder<List<HistoryInfoModel>>(
+            future: context.read<HomeProvider>().getHistory(),
+            builder: (context, AsyncSnapshot<List<HistoryInfoModel>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                if (snapshot.hasData) {
+                  return ListView.separated(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final info = snapshot.data![index];
+                      return HistoryInfo(
+                        time: info.time,
+                        cardModels: info.historyCardModel,
+                      );
+                    },
+                    separatorBuilder: (context, index) => 10.verticalSpace,
+                  );
+                } else {
+                  return Center(
+                    child: Text(
+                      'No histories',
+                      style: AppTypography.title.copyWith(color: Colors.black),
+                    ),
+                  );
+                }
+              }
             },
-            separatorBuilder: (context, index) => 10.verticalSpace,
           ),
         ),
       ),
@@ -137,7 +158,7 @@ class HistoryCard extends StatelessWidget {
               ),
               5.verticalSpace,
               Text(
-                price,
+                '$price đ',
                 style: AppTypography.body.copyWith(color: Colors.black),
               ),
             ],

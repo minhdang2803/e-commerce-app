@@ -50,9 +50,7 @@ class AddressScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              context.read<CheckoutProvider>().addressModel.isNotEmpty
-                  ? _buildListView(context)
-                  : _buildEmptyCart(),
+              _buildListView(context),
               CustomButton(
                 text: 'Add Address',
                 color: AppColor.buttonColor,
@@ -83,36 +81,49 @@ class AddressScreen extends StatelessWidget {
     return Expanded(
       child: Consumer<CheckoutProvider>(
         builder: (context, value, child) {
-          return ListView.separated(
-            itemBuilder: (context, index) {
-              final element =
-                  context.read<CheckoutProvider>().addressModel[index];
-              return Dismissible(
-                key: UniqueKey(),
-                direction: DismissDirection.endToStart,
-                onDismissed: (direction) {
-                  value.removeAddress(element);
-                },
-                background: Container(
-                  alignment: AlignmentDirectional.centerEnd,
-                  padding: EdgeInsets.only(right: 10.w),
-                  color: Colors.red,
-                  child: const Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                ),
-                child: AddressCard(
-                  title: element.title,
-                  description: element.address,
-                  onChange: (value) {},
-                ),
-              );
-            },
-            separatorBuilder: (context, index) => 10.verticalSpace,
-            itemCount: context.read<CheckoutProvider>().addressModel.length,
-          );
+          return FutureBuilder(
+              future: value.getAddress(),
+              builder: (context, AsyncSnapshot<List<AddressModel>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    return ListView.separated(
+                      itemBuilder: (context, index) {
+                        final element = snapshot.data![index];
+                        return Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) {
+                            value.removeAddress(element);
+                          },
+                          background: Container(
+                            alignment: AlignmentDirectional.centerEnd,
+                            padding: EdgeInsets.only(right: 10.w),
+                            color: Colors.red,
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                          ),
+                          child: AddressCard(
+                            title: element.title,
+                            description: element.address,
+                            onChange: (value) {},
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) => 10.verticalSpace,
+                      itemCount: snapshot.data!.length,
+                    );
+                  } else {
+                    return _buildEmptyCart();
+                  }
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              });
         },
       ),
     );
@@ -163,22 +174,3 @@ class AddressCard extends StatelessWidget {
     );
   }
 }
-
-List<AddressModel> addressList = [
-  AddressModel(
-    address: '268 Lý Thường Kiệt, P14, Q10, TPHCM',
-    title: 'Đại học Bách Khoa',
-  ),
-  AddressModel(
-    address: '285 CMT8, P12, Q10, TPHCM',
-    title: 'Tòa Nhà Viettel Complex',
-  ),
-  AddressModel(
-    address: '231 Lê Quang Định, P7, QBT, TPHCM',
-    title: 'Nhà riêng 1',
-  ),
-  AddressModel(
-    address: '47/42/11 D1 Bùi Đình Túy, P24, QBT, TPHCM',
-    title: 'Nhà riêng 2',
-  )
-];

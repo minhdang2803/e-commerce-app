@@ -30,12 +30,20 @@
 //       {'title': title, 'status': status, 'price': price};
 // }
 
-class HistoryInfoModel {
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecom/models/home_screen/account_component/history_card_model.dart';
+import 'package:hive/hive.dart';
+part 'history_info_model.g.dart';
+
+@HiveType(typeId: 2)
+class HistoryInfoModel extends HiveObject {
   HistoryInfoModel({
     required this.time,
     required this.historyCardModel,
   });
+  @HiveField(0)
   late final String time;
+  @HiveField(1)
   late final List<HistoryCardModel> historyCardModel;
 
   HistoryInfoModel.fromJson(Map<String, dynamic> json) {
@@ -48,32 +56,26 @@ class HistoryInfoModel {
   Map<String, dynamic> toJson() {
     final currentData = <String, dynamic>{};
     currentData['time'] = time;
-    currentData['history_card'] = historyCardModel.map((e) => e.toJson()).toList();
+    currentData['history_card'] =
+        historyCardModel.map((e) => e.toJson()).toList();
     return currentData;
   }
-}
 
-class HistoryCardModel {
-  HistoryCardModel({
-    required this.price,
-    required this.title,
-    required this.status,
-  });
-  late final String price;
-  late final String title;
-  late final String status;
+  factory HistoryInfoModel.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    final data = snapshot.data();
 
-  HistoryCardModel.fromJson(Map<String, dynamic> json) {
-    price = json['price'];
-    title = json['title'];
-    status = json['status'];
+    return HistoryInfoModel(
+        time: data?['time'],
+        historyCardModel: List.from(data!['history_card']));
   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['price'] = price;
-    _data['title'] = title;
-    _data['status'] = status;
-    return _data;
+  Map<String, dynamic> toFirestore() {
+    return {
+      if (time != null) "time": time,
+      if (historyCardModel != null) "history_card": historyCardModel,
+    };
   }
 }

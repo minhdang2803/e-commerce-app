@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../../../utils/string_extension.dart';
 
 class CartComponent extends StatefulWidget {
   const CartComponent({super.key});
@@ -115,7 +116,8 @@ class _CartComponentState extends State<CartComponent> {
                   'Total Price:',
                   style: AppTypography.title.copyWith(color: Colors.black),
                 ),
-                Text('${context.watch<HomeProvider>().getTotalPrice()} VNĐ',
+                Text(
+                    '${context.watch<HomeProvider>().getTotalPrice().toString().parseMoney('.')} VNĐ',
                     style: AppTypography.body.copyWith(color: Colors.red)),
               ],
             ),

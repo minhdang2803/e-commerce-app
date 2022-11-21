@@ -1,6 +1,4 @@
 import 'package:ecom/controllers/home_provider.dart';
-import 'package:ecom/models/home_screen/product_component/ecom_product_model.dart';
-import 'package:ecom/models/home_screen/product_component/goods_model.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:ecom/views/home_screen/home_component/product_item.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +98,6 @@ class PaymentInfoScreenState extends State<PaymentInfoScreen> {
                 MaterialPageRoute(
                   builder: (context) {
                     final value = (provider.getTotalPrice()).toInt();
-
                     return MyHomePage(
                       title: 'Payment',
                       value.toString(),
@@ -229,16 +226,17 @@ class PaymentInfoScreenState extends State<PaymentInfoScreen> {
                   itemBuilder: (context, index) {
                     final current = provider.cart.elementAt(index);
                     return GestureDetector(
-                        onTap: () {
-                          context.goNamed(
-                            ProductItem.routeName,
-                            extra: <String, Object>{'item': current},
-                            params: <String, String>{
-                              'name': current.productName.split(' ').join(),
-                            },
-                          );
-                        },
-                        child: ProductDropdown(itemModel: current));
+                      onTap: () {
+                        context.goNamed(
+                          ProductItem.routeName,
+                          extra: <String, Object>{'item': current},
+                          params: <String, String>{
+                            'name': current.productName.split(' ').join(),
+                          },
+                        );
+                      },
+                      child: ProductDropdown(itemModel: current),
+                    );
                   },
                   itemCount: provider.cart.length,
                 ),
