@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPref {
-  static final SharedPref instance = SharedPref._internal();
-  SharedPref._internal();
+class SharedPrefWrapper {
+  static final SharedPrefWrapper instance = SharedPrefWrapper._internal();
+  SharedPrefWrapper._internal();
 
   Future set(String key, String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

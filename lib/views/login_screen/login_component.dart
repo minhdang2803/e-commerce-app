@@ -1,5 +1,6 @@
 import 'package:ecom/controllers/login_provider.dart';
 import 'package:ecom/theme/app_color.dart';
+import 'package:ecom/views/login_screen/admin_login_screen.dart';
 import 'package:ecom/views/reset_password/reset_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -134,15 +135,24 @@ class _LoginComponentState extends State<LoginComponent> {
   }
 
   Widget _buildOptions(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        child: Text(
-          'Forgot password?',
-          style: AppTypography.body,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextButton(
+          child: Text(
+            'Login as admin?',
+            style: AppTypography.body,
+          ),
+          onPressed: () => context.pushNamed(AdminLoginScreen.routeName),
         ),
-        onPressed: () => context.pushNamed(ResetPassword.routeName),
-      ),
+        TextButton(
+          child: Text(
+            'Forgot password?',
+            style: AppTypography.body,
+          ),
+          onPressed: () => context.pushNamed(ResetPassword.routeName),
+        ),
+      ],
     );
   }
 }

@@ -159,7 +159,7 @@ class _AccountComponentState extends State<AccountComponent> {
               onPressed: () {
                 Provider.of<LoginProvider>(context, listen: false)
                     .logoutGoogle();
-                SharedPref.instance.remove('isLoggedIn');
+                SharedPrefWrapper.instance.remove('isLoggedIn');
                 context.goNamed(OnboardingScreen.routeName);
               },
             ),

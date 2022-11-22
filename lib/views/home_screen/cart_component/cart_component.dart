@@ -4,6 +4,7 @@ import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:ecom/utils/custom_button.dart';
 import 'package:ecom/views/checkout_screen/checkout_screen.dart';
+import 'package:ecom/views/widgets/custom_dismiss_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -71,16 +72,7 @@ class _CartComponentState extends State<CartComponent> {
           onDismissed: (direction) {
             value.removeProductAtIndex(item);
           },
-          background: Container(
-            alignment: AlignmentDirectional.centerEnd,
-            padding: EdgeInsets.only(right: 10.w),
-            color: Colors.red,
-            child: const Icon(
-              Icons.delete,
-              color: Colors.white,
-              size: 40,
-            ),
-          ),
+          background: CustomDismissBackground(),
           child: ProductCard(itemModel: item),
         );
       },

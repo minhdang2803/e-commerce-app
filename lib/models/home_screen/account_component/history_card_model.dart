@@ -7,6 +7,7 @@ class HistoryCardModel extends HiveObject {
     required this.price,
     required this.title,
     required this.status,
+    required this.quantity,
   });
   @HiveField(0)
   late final String price;
@@ -14,18 +15,27 @@ class HistoryCardModel extends HiveObject {
   late final String title;
   @HiveField(2)
   late final String status;
+  @HiveField(3)
+  late final int quantity;
 
   HistoryCardModel.fromJson(Map<String, dynamic> json) {
     price = json['price'];
     title = json['title'];
     status = json['status'];
+    quantity = json['quantity'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({
+    String? status_,
+    int? quantity_,
+    String? price_,
+    String? title_,
+  }) {
     final _data = <String, dynamic>{};
-    _data['price'] = price;
-    _data['title'] = title;
-    _data['status'] = status;
+    _data['price'] = price_ ?? price;
+    _data['title'] = title_ ?? title;
+    _data['status'] = status_ ?? status;
+    _data['quantity'] = quantity_ ?? quantity;
     return _data;
   }
 }

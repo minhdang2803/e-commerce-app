@@ -1,3 +1,5 @@
+import 'package:ecom/views/home_screen/admin_home_screen.dart';
+import 'package:ecom/views/login_screen/admin_login_screen.dart';
 import 'package:ecom/vnpay_config/payment_screen.dart';
 import 'package:ecom/controllers/app_state.dart';
 import 'package:ecom/models/home_screen/product_component/ecom_product_model.dart';
@@ -35,7 +37,8 @@ import '../views/home_screen/home_screen.dart';
 class MyRouter {
   final AppState appState;
   bool isLoggedIn;
-  MyRouter(this.appState, this.isLoggedIn);
+  bool isAdmin;
+  MyRouter(this.appState, this.isLoggedIn, this.isAdmin);
   final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
   final _shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
   late GoRouter myRouter = GoRouter(
@@ -65,6 +68,11 @@ class MyRouter {
         pageBuilder: (context, state) => LoginScreen.page(),
       ),
       GoRoute(
+        path: '/admin',
+        name: AdminLoginScreen.routeName,
+        pageBuilder: (context, state) => AdminLoginScreen.page(),
+      ),
+      GoRoute(
         path: '/register',
         name: RegisterScreen.routeName,
         pageBuilder: (context, state) => RegisterScreen.page(),
@@ -73,6 +81,11 @@ class MyRouter {
         path: '/reset',
         name: ResetPassword.routeName,
         pageBuilder: (context, state) => ResetPassword.page(),
+      ),
+      GoRoute(
+        path: '/adminHome',
+        name: AdminHomeScreen.routeName,
+        pageBuilder: (context, state) => AdminHomeScreen.page(),
       ),
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
@@ -197,6 +210,9 @@ class MyRouter {
         appState.onBoaringScreenProcess();
         if (isLoggedIn) {
           return state.namedLocation(HomeComponent.routeName);
+        }
+        if (isAdmin) {
+          return state.namedLocation(AdminHomeScreen.routeName);
         } else {
           return state.namedLocation(OnboardingScreen.routeName);
         }

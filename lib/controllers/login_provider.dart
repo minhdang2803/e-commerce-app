@@ -14,9 +14,6 @@ class LoginProvider extends BaseProvider {
 
   bool isPop = false;
   bool isCancel = false;
-  bool isPassword = true;
-  bool isVarified = false;
-  bool isFirstTimeCheck = true;
 
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
@@ -50,7 +47,7 @@ class LoginProvider extends BaseProvider {
         final currentUser = FirebaseAuth.instance.currentUser!;
         DatabaseService(uid: currentUser.uid)
             .savingUserData(currentUser.displayName!, currentUser.email!);
-        SharedPref.instance.setBool('isLoggedIn', true);
+        SharedPrefWrapper.instance.setBool('isLoggedIn', true);
       }
       setStatus(ViewState.done, notify: true);
     } on PlatformException catch (exception) {
@@ -93,7 +90,7 @@ class LoginProvider extends BaseProvider {
         password: password,
       )
           .whenComplete(() async {
-        SharedPref.instance.setBool('isLoggedIn', true);
+        SharedPrefWrapper.instance.setBool('isLoggedIn', true);
       });
       if (!FirebaseAuth.instance.currentUser!.emailVerified) {
         setErrorMessage('Google account is not verified', notify: true);

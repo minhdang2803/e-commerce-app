@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../../../models/models.dart';
 
-enum DeliveryStatus { shipped, shipping, wating }
+
 
 class OrderHistoryScreen extends StatelessWidget {
   const OrderHistoryScreen({super.key});
@@ -122,10 +122,10 @@ class HistoryInfo extends StatelessWidget {
               return _buildEmptyCart();
             }
             return HistoryCard(
-              title: currentCard.title,
-              price: currentCard.price,
-              status: currentCard.status,
-            );
+                title: currentCard.title,
+                price: currentCard.price,
+                status: currentCard.status,
+                quantity: currentCard.quantity);
           },
           separatorBuilder: (context, index) => 5.verticalSpace,
           itemCount: cardModels.length,
@@ -147,15 +147,16 @@ class HistoryInfo extends StatelessWidget {
 }
 
 class HistoryCard extends StatelessWidget {
-  const HistoryCard({
-    super.key,
-    required this.price,
-    required this.status,
-    required this.title,
-  });
+  const HistoryCard(
+      {super.key,
+      required this.price,
+      required this.status,
+      required this.title,
+      required this.quantity});
   final String title;
   final String price;
   final String status;
+  final int quantity;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -179,9 +180,12 @@ class HistoryCard extends StatelessWidget {
               ),
               5.verticalSpace,
               Text(
-                '$price đ',
+                'Price: $price đ',
                 style: AppTypography.body.copyWith(color: Colors.black),
               ),
+              5.verticalSpace,
+              Text('Total: $quantity',
+                  style: AppTypography.body.copyWith(color: Colors.black))
             ],
           ),
           Padding(

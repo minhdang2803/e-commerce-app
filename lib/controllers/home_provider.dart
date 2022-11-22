@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecom/controllers/base_provider.dart';
 import 'package:ecom/data/hive_config.dart';
+import 'package:ecom/models/admin_feature/transaction_model.dart';
+import 'package:ecom/models/home_screen/account_component/history_card_model.dart';
 import 'package:ecom/models/home_screen/account_component/history_info_model.dart';
 import 'package:ecom/utils/string_extension.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,7 +75,7 @@ class HomeProvider extends BaseProvider {
     numberOfItem = {};
   }
 
-  Future<void> addHistory(List<Goods> goods) async {
+  Future<void> addHistory(List<Goods> goods, Map<int, int> quantity) async {
     List<Map<String, dynamic>> listOfGood = [];
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final CollectionReference userHistoryCollection =
@@ -84,14 +87,28 @@ class HomeProvider extends BaseProvider {
       listOfGood.add({
         "price": (int.parse(element.truePrice) * 24873).toString().parseMoney(),
         "status": 'waiting',
-        "title": element.productName
+        "title": element.productName,
+        "quantity": quantity[element.id]
       });
     }
-
     await document.update(
       {
         "histories": FieldValue.arrayUnion([
           {"time": timeNow, "history_card": listOfGood}
+        ])
+      },
+    );
+    final CollectionReference transaction =
+        FirebaseFirestore.instance.collection("transactions");
+    final DocumentReference transactionDoc = transaction.doc('admin');
+    await transactionDoc.update(
+      {
+        "waiting": FieldValue.arrayUnion([
+          {
+            "uid": uid,
+            "products": listOfGood,
+            "time": timeNow,
+          }
         ])
       },
     );
@@ -104,7 +121,7 @@ class HomeProvider extends BaseProvider {
         FirebaseFirestore.instance.collection("users");
     final DocumentReference document = userHistoryCollection.doc(uid);
     await document.get().then((value) {
-      Map<String,dynamic>? data = value.data() as Map<String, dynamic>?;
+      Map<String, dynamic>? data = value.data() as Map<String, dynamic>?;
       if (data != null) {
         for (var element in data['histories']) {
           result.add(HistoryInfoModel.fromJson(element));
@@ -112,6 +129,30 @@ class HomeProvider extends BaseProvider {
       }
     });
     return Future.value(result);
+  }
+
+  List<ProductTransaction> transactions = [];
+  Future<void> getUserHistory(String uid) async {
+    List<HistoryInfoModel> result = [];
+    final CollectionReference userHistoryCollection =
+        FirebaseFirestore.instance.collection("users");
+    final DocumentReference document = userHistoryCollection.doc(uid);
+    await document.get().then((value) {
+      Map<String, dynamic>? data = value.data() as Map<String, dynamic>?;
+      if (data != null) {
+        for (var element in data['histories']) {
+          result.add(HistoryInfoModel.fromJson(element));
+        }
+      }
+    });
+    for (var element in result) {
+      transactions.add(ProductTransaction(
+        time: element.time,
+        uid: uid,
+        items: element.historyCardModel,
+      ));
+    }
+    print(transactions);
   }
 
   // 9704198526191432198
@@ -137,5 +178,125 @@ class HomeProvider extends BaseProvider {
     // await Future.delayed(const Duration(milliseconds: 500));
     result.addAll(myValue.map((e) => e));
     return result;
+  }
+
+  Future<void> acceptTransaction(
+      ProductTransaction transaction, HistoryCardModel card) async {
+    final CollectionReference transactionDoc =
+        FirebaseFirestore.instance.collection("transactions");
+    final DocumentReference currentTransaction = transactionDoc.doc('admin');
+    final CollectionReference userHistoryCollection =
+        FirebaseFirestore.instance.collection("users");
+    final DocumentReference document =
+        userHistoryCollection.doc(transaction.uid);
+    await getUserHistory(transaction.uid);
+
+    final List<Map<String, dynamic>> remainList = [];
+    for (final element in transaction.items) {
+      if (element.title != card.title) {
+        remainList.add(element.toJson(status_: 'waiting'));
+      }
+    }
+    late ProductTransaction clm;
+    for (final element in transactions) {
+      if (element.uid == transaction.uid && element.time == transaction.time) {
+        for (final e in element.items) {
+          if (e.title == card.title) {
+            element.items.removeWhere((element) =>
+                element.title == e.title && element.status == 'waiting');
+            element.items.add(HistoryCardModel(
+                price: e.price,
+                title: e.title,
+                status: 'shipping',
+                quantity: e.quantity));
+            clm = element;
+            break;
+          }
+        }
+      }
+    }
+    transactions
+        .removeWhere((item) => item.uid == clm.uid && item.time == clm.time);
+    transactions.add(clm);
+    //Update user Histories
+    await document.update({"histories": []});
+    for (var element in transactions) {
+      await document.update({
+        "histories": FieldValue.arrayUnion([
+          {
+            "history_card": element.items.map((e) => e.toJson()).toList(),
+            "time": element.time
+          }
+        ])
+      });
+    }
+    if (remainList.isEmpty) {
+      await currentTransaction.update({"waiting": []});
+    } else {
+      await currentTransaction.update({"waiting": []});
+      await currentTransaction.update({
+        "waiting":
+            FieldValue.arrayUnion([transaction.toJson(items_: remainList)])
+      });
+    }
+    notifyListeners();
+  }
+
+  Future<List<ProductTransaction>> getTransaction() async {
+    final CollectionReference transactionDoc =
+        FirebaseFirestore.instance.collection("transactions");
+    final DocumentReference currentTransaction = transactionDoc.doc('admin');
+    List<ProductTransaction> result = [];
+    await currentTransaction.get().then((value) {
+      final data = value.data() as Map<String, dynamic>?;
+      if (data != null) {
+        for (var element in data['waiting']) {
+          result.add(ProductTransaction.fromJson(element));
+        }
+      }
+    });
+
+    return Future.value(result);
+  }
+
+  Future<void> updateShippingTransaction(
+      ProductTransaction transaction, HistoryCardModel card) async {
+    final CollectionReference transactionDoc =
+        FirebaseFirestore.instance.collection("transactions");
+    final DocumentReference currentTransaction = transactionDoc.doc('admin');
+    List<ProductTransaction> result = [];
+    await currentTransaction.get().then((value) {
+      final data = value.data() as Map<String, dynamic>?;
+      if (data != null) {
+        for (var element in data['shipping']) {
+          result.add(ProductTransaction.fromJson(element));
+        }
+      }
+    });
+    if (result.isEmpty) {
+      await currentTransaction.update({
+        "Shipping": FieldValue.arrayUnion([
+          {
+            "uid": transaction.uid,
+            "time": transaction.time,
+            "products": {
+              "price": card.price,
+              "status": 'shipping',
+              "title": card.title,
+              "quantity": card.quantity
+            }
+          }
+        ])
+      });
+    } else {
+      for (final element in result) {
+        if (element.uid == transaction.uid &&
+            element.time == transaction.time) {
+          element.items.add(card);
+        }
+      }
+      await currentTransaction.update({"shipping": []});
+      await currentTransaction.update({"shipping": result});
+    }
   }
 }
