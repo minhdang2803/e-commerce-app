@@ -67,6 +67,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   bloc: ^8.1.0
   another_flushbar: ^1.12.29
+  flutter_launcher_icons: ^0.11.0
 
 
 dev_dependencies:
@@ -82,7 +83,13 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   build_runner: ^2.3.2
   hive_generator: ^2.0.0
-
+flutter_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/online-store.png"
+flutter_launcher_name:
+  name: "e-Com"
 # flutter_native_splash:
 #   color: "#ffffff"
 #   image: assets/splash_screen/splash_screen.png
