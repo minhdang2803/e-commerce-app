@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecom/controllers/base_provider.dart';
 import 'package:ecom/data/hive_config.dart';
@@ -131,8 +129,8 @@ class HomeProvider extends BaseProvider {
     return Future.value(result);
   }
 
-  List<ProductTransaction> transactions = [];
-  Future<void> getUserHistory(String uid) async {
+  Future<List<ProductTransaction>> getUserHistory(String uid) async {
+    List<ProductTransaction> transactions = [];
     List<HistoryInfoModel> result = [];
     final CollectionReference userHistoryCollection =
         FirebaseFirestore.instance.collection("users");
@@ -152,7 +150,7 @@ class HomeProvider extends BaseProvider {
         items: element.historyCardModel,
       ));
     }
-    print(transactions);
+    return Future.value(transactions);
   }
 
   // 9704198526191432198
@@ -189,7 +187,7 @@ class HomeProvider extends BaseProvider {
         FirebaseFirestore.instance.collection("users");
     final DocumentReference document =
         userHistoryCollection.doc(transaction.uid);
-    await getUserHistory(transaction.uid);
+    final transactions = await getUserHistory(transaction.uid);
 
     final List<Map<String, dynamic>> remainList = [];
     for (final element in transaction.items) {
@@ -242,7 +240,7 @@ class HomeProvider extends BaseProvider {
     notifyListeners();
   }
 
-  Future<List<ProductTransaction>> getTransaction() async {
+  Future<List<ProductTransaction>> getTransaction(String type) async {
     final CollectionReference transactionDoc =
         FirebaseFirestore.instance.collection("transactions");
     final DocumentReference currentTransaction = transactionDoc.doc('admin');
@@ -250,7 +248,7 @@ class HomeProvider extends BaseProvider {
     await currentTransaction.get().then((value) {
       final data = value.data() as Map<String, dynamic>?;
       if (data != null) {
-        for (var element in data['waiting']) {
+        for (var element in data[type]) {
           result.add(ProductTransaction.fromJson(element));
         }
       }
@@ -275,28 +273,40 @@ class HomeProvider extends BaseProvider {
     });
     if (result.isEmpty) {
       await currentTransaction.update({
-        "Shipping": FieldValue.arrayUnion([
-          {
-            "uid": transaction.uid,
-            "time": transaction.time,
-            "products": {
-              "price": card.price,
-              "status": 'shipping',
-              "title": card.title,
-              "quantity": card.quantity
-            }
-          }
+        "shipping": FieldValue.arrayUnion([
+          transaction.toJson(
+            items_: ([card]).map((e) => e.toJson(status_: 'shipping')).toList(),
+          )
         ])
       });
     } else {
+      bool check = false;
       for (final element in result) {
         if (element.uid == transaction.uid &&
             element.time == transaction.time) {
-          element.items.add(card);
+          element.items.add(card.copyWith(status_: 'shipping'));
+          check = true;
+          break;
         }
       }
+      if (!check) {
+        result.add(
+          ProductTransaction(
+              time: transaction.time,
+              uid: transaction.uid,
+              items: [card.copyWith(status_: 'shipping')]),
+        );
+      }
       await currentTransaction.update({"shipping": []});
-      await currentTransaction.update({"shipping": result});
+      for (final element in result) {
+        await currentTransaction.update({
+          "shipping": FieldValue.arrayUnion([
+            element.toJson(
+              items_: element.items.map((e) => e.toJson()).toList(),
+            )
+          ])
+        });
+      }
     }
   }
 }

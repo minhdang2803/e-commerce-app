@@ -1,6 +1,7 @@
 import 'package:ecom/controllers/admin_controller/admin_cubit.dart';
 import 'package:ecom/controllers/home_provider.dart';
 import 'package:ecom/models/admin_feature/transaction_model.dart';
+import 'package:ecom/models/home_screen/account_component/history_card_model.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:ecom/views/screens.dart';
 import 'package:ecom/views/widgets/custom_dismiss_background.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -45,59 +47,79 @@ class AdminHomeScreen extends StatelessWidget {
           context.goNamed(OnboardingScreen.routeName);
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(
-              onPressed: () {
-                context.read<AdminCubit>().logOut();
-              },
-              icon: const Icon(Icons.logout),
-            )
-          ],
-          title: Text(
-            'Transactions management',
-            style: AppTypography.body.copyWith(color: Colors.black),
-          ),
-        ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: Consumer<HomeProvider>(
-                  builder: (context, value, child) {
-                    return FutureBuilder(
-                      future: value.getTransaction(),
-                      builder: (context,
-                          AsyncSnapshot<List<ProductTransaction>> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                            return ListView.separated(
-                              itemBuilder: (context, index) {
-                                final current = snapshot.data![index];
-                                return TransactionCard(transaction: current);
-                              },
-                              separatorBuilder: (context, index) =>
-                                  10.verticalSpace,
-                              itemCount: snapshot.data!.length,
-                            );
-                          } else {
-                            return Center(child: _buildEmptyCart());
-                          }
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
-                    );
-                  },
-                ),
-              ),
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: const TabBar(tabs: [
+              Tab(
+                  icon: FaIcon(
+                FontAwesomeIcons.spinner,
+                color: Colors.black,
+              )),
+              Tab(
+                  icon: Icon(
+                Icons.check,
+                color: Colors.black,
+              )),
+            ]),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  context.read<AdminCubit>().logOut();
+                },
+                icon: const Icon(Icons.logout),
+              )
             ],
+            title: Text(
+              'Transactions management',
+              style: AppTypography.body.copyWith(color: Colors.black),
+            ),
           ),
+          body: SafeArea(
+              child: TabBarView(children: [
+            _buildWaitingList(context, 'waiting'),
+            _buildWaitingList(context, 'shipping'),
+          ])),
         ),
       ),
+    );
+  }
+
+  Widget _buildWaitingList(BuildContext context, String type) {
+    return Column(
+      children: [
+        Expanded(
+          child: Consumer<HomeProvider>(
+            builder: (context, value, child) {
+              return FutureBuilder(
+                future: value.getTransaction(type),
+                builder: (context,
+                    AsyncSnapshot<List<ProductTransaction>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      return ListView.separated(
+                        itemBuilder: (context, index) {
+                          final current = snapshot.data![index];
+                          return TransactionCard(transaction: current);
+                        },
+                        separatorBuilder: (context, index) => 10.verticalSpace,
+                        itemCount: snapshot.data!.length,
+                      );
+                    } else {
+                      return Center(child: _buildEmptyCart());
+                    }
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -136,7 +158,7 @@ class TransactionCard extends StatelessWidget {
             physics: const ScrollPhysics(),
             primary: false,
             itemBuilder: (context, index) {
-              final currentCard = transaction.items[index];
+              HistoryCardModel currentCard = transaction.items[index];
               if (transaction.items.isEmpty) {
                 return _buildEmptyCart();
               }
@@ -146,11 +168,14 @@ class TransactionCard extends StatelessWidget {
                 direction: DismissDirection.horizontal,
                 secondaryBackground:
                     const CustomDismissBackground(isSecondary: false),
-                onDismissed: (direction) {
+                onDismissed: (direction) async {
                   if (direction == DismissDirection.startToEnd) {
-                    context
+                    await context
                         .read<HomeProvider>()
                         .acceptTransaction(transaction, currentCard);
+                    await context
+                        .read<HomeProvider>()
+                        .updateShippingTransaction(transaction, currentCard);
                   }
                 },
                 child: HistoryCard(

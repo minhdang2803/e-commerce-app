@@ -25,6 +25,20 @@ class HistoryCardModel extends HiveObject {
     quantity = json['quantity'];
   }
 
+  HistoryCardModel copyWith({
+    String? price_,
+    String? title_,
+    String? status_,
+    int? quantity_,
+  }) {
+    return HistoryCardModel(
+      price: price_ ?? price,
+      title: title_ ?? title,
+      status: status_ ?? status,
+      quantity: quantity_ ?? quantity,
+    );
+  }
+
   Map<String, dynamic> toJson({
     String? status_,
     int? quantity_,
