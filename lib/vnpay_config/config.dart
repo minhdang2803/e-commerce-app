@@ -1,12 +1,12 @@
 // config
 String vnpUrl = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
-String vnpHashSecret = 'IBZBHIGZBWJTXICGTLDEIBVBDYSYGXEF'; // Get from VNPay
+String vnpHashSecret = 'LIALXXIRYJTIZMXBWLXDJBOLDRHCWPPV'; // Get from VNPay
 String vnpVersion = '2.0.1';
 String vnpCommand = 'pay';
 String vnpIpAddr = '172.20.10.5';
 String vnpOrderInfo = '';
 String vnpReturnUrl = 'vnpaysample://vnpaytesting.com';
-String vnpTmnCode = 'PERZLMJ6';
+String vnpTmnCode = 'P8VQCAQE';
 String vnpTxnRef = DateTime.now().millisecondsSinceEpoch.toString();
 
 const List<String> returnParams = [
