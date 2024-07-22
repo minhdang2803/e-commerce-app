@@ -6,9 +6,9 @@ class ConnectionUtil {
   static Future<bool> hasInternetConnection() async {
     final connectivityResult = await _connectivity.checkConnectivity();
     switch (connectivityResult) {
-      case ConnectivityResult.mobile:
-      case ConnectivityResult.wifi:
-      case ConnectivityResult.ethernet:
+      case ConnectivityResult.mobile ||
+            ConnectivityResult.wifi ||
+            ConnectivityResult.ethernet:
         return true;
 
       default:

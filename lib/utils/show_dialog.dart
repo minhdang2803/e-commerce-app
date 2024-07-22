@@ -18,7 +18,7 @@ void showDialogAlert(
       title: Text(
         title,
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.headline3!.copyWith(
+        style: Theme.of(context).textTheme.headlineMedium!.copyWith(
               fontWeight: FontWeight.normal,
             ),
       ),
@@ -36,7 +36,7 @@ void showDialogAlert(
               context,
               widget: Text(
                 buttonText,
-                style: Theme.of(context).textTheme.headline5!.copyWith(
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                       fontWeight: FontWeight.normal,
                       color: AppColor.buttonColor,
                     ),

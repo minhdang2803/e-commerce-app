@@ -8,8 +8,8 @@ class PaymentService {
   PaymentService() {
     _dio = Dio(BaseOptions(
       baseUrl: vnpUrl,
-      connectTimeout: 15000,
-      receiveTimeout: 13000,
+      connectTimeout: const Duration(milliseconds: 13000),
+      receiveTimeout: const Duration(milliseconds: 13000),
     ));
     initializeInterceptors();
   }

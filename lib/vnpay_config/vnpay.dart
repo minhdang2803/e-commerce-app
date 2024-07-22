@@ -14,22 +14,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late WebViewController controller;
+
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    setupController();
+    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: WebView(
-        initialUrl: getPaymentUrl(widget.amount),
-        javascriptMode: JavascriptMode.unrestricted,
-        navigationDelegate: (NavigationRequest request) {
+  void setupController() {
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(NavigationDelegate(
+        onProgress: (int progress) {
+          // Update loading bar.
+        },
+        onPageStarted: (String url) {},
+        onPageFinished: (String url) {},
+        onHttpError: (HttpResponseError error) {},
+        onWebResourceError: (WebResourceError error) {},
+        onNavigationRequest: (NavigationRequest request) {
           if (request.url.startsWith('vnpaysample://vnpaytesting.com')) {
             Navigator.push(
                 context,
@@ -39,10 +45,20 @@ class _MyHomePageState extends State<MyHomePage> {
             print('blocking navigation to $request}');
             return NavigationDecision.prevent;
           }
-
-          print('allowing navigation to $request');
           return NavigationDecision.navigate;
         },
+      ))
+      ..loadRequest(Uri.parse(getPaymentUrl(widget.amount)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: WebViewWidget(
+        controller: controller,
       ),
     );
   }

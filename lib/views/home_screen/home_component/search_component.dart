@@ -4,8 +4,8 @@ import 'package:ecom/theme/app_font.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SearchBar extends StatelessWidget {
-  const SearchBar({super.key});
+class EcomSearchBar extends StatelessWidget {
+  const EcomSearchBar({super.key});
 
   @override
   Widget build(BuildContext context) {
