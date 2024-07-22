@@ -46,7 +46,7 @@ class PaymentService {
 
 String getPaymentUrl(String amount) {
   String url = '';
-  final params = <String, String>{
+  final queryParameters = <String, String>{
     'vnp_Amount': (int.parse(amount) * 100).toString(),
     'vnp_Command': vnpCommand,
     'vnp_CreateDate': DateTime.now()
@@ -64,7 +64,7 @@ String getPaymentUrl(String amount) {
     'vnp_TxnRef': DateTime.now().millisecondsSinceEpoch.toString(),
     'vnp_Version': vnpVersion,
   };
-  params.forEach((key, value) {
+  queryParameters.forEach((key, value) {
     if (value.isNotEmpty) {
       url += '$key=$value';
       if (key != 'vnp_Version') {

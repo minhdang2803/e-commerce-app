@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
 
   static int _calculateSelectedIndex(BuildContext context) {
     final GoRouter route = GoRouter.of(context);
-    final String location = route.location;
+    final String location = route.location();
     if (location.startsWith('/home')) {
       return 0;
     }
@@ -96,5 +96,15 @@ class HomeScreen extends StatelessWidget {
         GoRouter.of(context).go('/account');
         break;
     }
+  }
+}
+
+
+extension GoRouterExtension on GoRouter {
+  String location() {
+    final RouteMatch lastMatch = routerDelegate.currentConfiguration.last;
+    final RouteMatchList matchList = lastMatch is ImperativeRouteMatch ? lastMatch.matches : routerDelegate.currentConfiguration;
+    final String location = matchList.uri.toString();
+    return location;
   }
 }

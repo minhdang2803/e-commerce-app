@@ -200,11 +200,11 @@ class MyRouter {
       ),
     ],
     redirect: (context, state) {
-      if (state.subloc == '/splash' && !appState.isSplashScreenDone) {
+      if (state.matchedLocation == '/splash' && !appState.isSplashScreenDone) {
         appState.initializedApp();
         return null;
       }
-      if (state.subloc == '/splash' &&
+      if (state.matchedLocation == '/splash' &&
           appState.isSplashScreenDone &&
           !appState.isOnboardingSceenDone) {
         appState.onBoaringScreenProcess();

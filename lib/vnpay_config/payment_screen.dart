@@ -230,7 +230,7 @@ class PaymentInfoScreenState extends State<PaymentInfoScreen> {
                         context.goNamed(
                           ProductItem.routeName,
                           extra: <String, Object>{'item': current},
-                          params: <String, String>{
+                          queryParameters: <String, String>{
                             'name': current.productName.split(' ').join(),
                           },
                         );

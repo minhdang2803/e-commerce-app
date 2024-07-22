@@ -304,7 +304,7 @@ class _ProductItemState extends State<ProductItem> {
                       context.goNamed(
                         ProductItem.routeName,
                         extra: <String, Object>{'item': item},
-                        params: <String, String>{
+                        queryParameters: <String, String>{
                           'name': '${item.productName.split(' ').join()}',
                         },
                       );

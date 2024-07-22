@@ -133,7 +133,7 @@ class ShoppingComponent extends StatelessWidget {
           onTap: (item) => context.goNamed(
             ProductItem.routeName,
             extra: <String, Object>{'item': item},
-            params: <String, String>{
+            queryParameters: <String, String>{
               'name': '${item.productName.split(' ').join()}',
             },
           ),
